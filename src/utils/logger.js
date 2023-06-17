@@ -1,10 +1,4 @@
-const express = require('express');
 const winston = require('winston');
-const mainRoutes = require('./src/routes/index');
-const sql = require('./src/configs/db.config');
-
-const app = express();
-const port = 3000;
 
 const logger = winston.createLogger({
   level: 'info',
@@ -20,10 +14,4 @@ const logger = winston.createLogger({
   ],
 });
 
-app.use(express.json());
-app.use('/', mainRoutes);
-// app.get('/', (req, res) => res.send('hello world'));
-
-app.listen(port, () => {
-  logger.log('info', `App listening on port ${port}`);
-});
+module.exports = logger;
