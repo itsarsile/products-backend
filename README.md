@@ -5,7 +5,7 @@ A simple API for creating a *products, categories, orders* using PostgreSQL as d
 
 # ERD Preview
 
-![ERD]('erd.png')
+![ERD](erd.png)
 
 ## Documentation
 API
