@@ -1,7 +1,10 @@
 const express = require('express');
 const winston = require('winston');
+const createHttpError = require('http-errors');
+const cors = require('cors');
+const xss = require('xss-clean');
+const helmet = require('helmet');
 const mainRoutes = require('./src/routes/index');
-const sql = require('./src/configs/db.config');
 
 const app = express();
 const port = 3000;
@@ -18,6 +21,21 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'logs/app.log' }),
     new winston.transports.Console(),
   ],
+});
+app.use(cors());
+app.use(xss());
+app.use(helmet());
+app.all('*', (req, res, next) => {
+  next(new createHttpError.NotFound());
+});
+
+app.use((error, req, res, next) => {
+  const messageError = error.message || 'Internal server error';
+  const statusCode = error.status || 500;
+
+  res.status(statusCode).json({
+    message: messageError,
+  });
 });
 
 app.use(express.json());

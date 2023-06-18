@@ -2,9 +2,11 @@
 const {
   selectAllOrders,
   selectOrderById,
-  insertOrder,
+  createOrder,
   updateOrder,
   deleteOrder,
+  countOrdersData,
+  calculateTotalPrice,
 } = require('../models/order');
 const logger = require('../utils/logger');
 const sendResponse = require('../utils/sendResponse');
@@ -13,7 +15,7 @@ const ordersController = {
   getAll: async (req, res) => {
     try {
       const data = await selectAllOrders();
-      sendResponse(res, { data, message: 'Susccessfully retrieved orders' }, true, 200);
+      sendResponse(res, { data, message: 'Successfully retrieved orders' }, true, 200);
     } catch (error) {
       logger.error(error);
     }
@@ -28,24 +30,25 @@ const ordersController = {
       sendResponse(res, { data: order, message: 'Successfully retrieved customer.' }, true, 200);
     } catch (error) {
       logger.error(`Error occured while retrieving order: ${error}`);
-      sendResponse(res, { error, message: 'An error occured while retrieving orde.' }, false, 500);
+      sendResponse(res, { error, message: 'An error occured while retrieving order.' }, false, 500);
     }
   },
   create: async (req, res) => {
     try {
       const {
-        product_id, customer_id, order_date, shipping_cost, quantity, total_price,
+        order_items,
       } = req.body;
+      const [count] = await countOrdersData();
+      const id = Number(count.count) + 1;
+      const total_price = await calculateTotalPrice(id, order_items);
       const orderData = {
-        product_id,
-        customer_id,
-        order_date,
-        shipping_cost,
-        quantity,
+        id,
+        order_items,
         total_price,
       };
-      const newOrder = await insertOrder(orderData);
-      sendResponse(res, { data: newOrder, message: 'Order created successfully' }, true, 201);
+
+      await createOrder(orderData);
+      sendResponse(res, { data: orderData, message: 'Order created successfully' }, true, 201);
     } catch (error) {
       logger.error(`Error occured while creating order: ${error}`);
       sendResponse(res, { error, message: 'An error occured while creating order.' }, false, 500);

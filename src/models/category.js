@@ -1,21 +1,29 @@
 const sql = require('../configs/db.config');
 
-const selectAllCategory = () => sql`SELECT * FROM category`;
+const selectAllCategories = () => sql`SELECT * FROM categories`;
+const selectCategoriesById = (categoryId) => sql`SELECT * FROM categories WHERE id=${categoryId}`;
 const insertCategory = (categoryData) => {
-  const { name, image } = categoryData;
+  const { id, name, image } = categoryData;
   return sql`
-      INSERT INTO category (name, image)
-      VALUES (${name}, ${image})
+      INSERT INTO categories (id, name, image)
+      VALUES (${id}, ${name}, ${image})
     `;
 };
 
 const deleteCategory = (categoryId) => sql`
-    DELETE FROM category
+    DELETE FROM categories
     WHERE id = ${categoryId}
 `;
 
-const findId = (id) => sql`SELECT id FROM category WHERE id=${id}`;
+const countCategoriesData = () => sql`SELECT COUNT(*) FROM categories`;
+
+const findCategoryId = (id) => sql`SELECT id FROM categories WHERE id=${id}`;
 
 module.exports = {
-  selectAllCategory, insertCategory, deleteCategory, findId,
+  selectAllCategories,
+  selectCategoriesById,
+  insertCategory,
+  deleteCategory,
+  findCategoryId,
+  countCategoriesData,
 };

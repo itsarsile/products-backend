@@ -1,17 +1,36 @@
 /* eslint-disable camelcase */
 const sql = require('../configs/db.config');
 
-const selectAllProduct = () => sql`SELECT * FROM "product"`;
-const selectProductById = (id) => sql`SELECT * FROM "product" WHERE id=${id}`;
+const selectAllProducts = async (sortBy, sortOrder, search, limit, offset) => {
+  let query = sql`SELECT * FROM products`;
+  if (sortBy) {
+    query = sql`${query} ORDER BY ${sql.unsafe(sortBy)} ${sql.unsafe(sortOrder)}`;
+  }
+
+  if (search) {
+    query = sql`${query} WHERE name ILIKE '%' || ${search} || '%'`;
+  }
+  if (limit) {
+    query = sql`${query} LIMIT ${limit}`;
+  }
+
+  if (offset) {
+    query = sql`${query} OFFSET ${offset}`;
+  }
+
+  const data = await query;
+  return data;
+};
+const selectProductById = (id) => sql`SELECT * FROM "products" WHERE id=${id}`;
 const insertProduct = (productData) => {
   const {
-    name, brand, description, image, rating, price, stock, category_id,
+    id, name, brand, description, image, rating, price, stock,
   } = productData;
   return sql`
-    INSERT INTO "product" (
-        name, brand, description, image, rating, price, stock, category_id
+    INSERT INTO "products" (
+        id, name, brand, description, image, rating, price, stock
     ) VALUES (
-        ${name}, ${brand}, ${description}, ${image}, ${rating}, ${price}, ${stock}, ${category_id}
+       ${id}, ${name}, ${brand}, ${description}, ${image}, ${rating}, ${price}, ${stock}
     )`;
 };
 
@@ -20,7 +39,7 @@ const updateProduct = (productId, productData) => {
     name, brand, description, image, rating, price, stock, category_id,
   } = productData;
   return sql`
-    UPDATE "product" SET
+    UPDATE "products" SET
         name=${name},
         brand=${brand},
         description=${description},
@@ -38,8 +57,16 @@ const deleteProduct = (productId) => sql`
       WHERE id = ${productId}
     `;
 
+const countProductsData = () => sql`SELECT COUNT(*) FROM products`;
+
 const findId = (id) => sql`SELECT id FROM product WHERE id=${id}`;
 
 module.exports = {
-  selectAllProduct, selectProductById, insertProduct, updateProduct, deleteProduct, findId,
+  selectAllProducts,
+  selectProductById,
+  insertProduct,
+  updateProduct,
+  deleteProduct,
+  findId,
+  countProductsData,
 };

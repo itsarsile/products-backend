@@ -1,0 +1,219 @@
+{
+    "info": {
+        "_postman_id": "b2643044-7043-46e0-86e5-c8c52d15063c",
+        "name": "Tugas Backend",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "Delete Product By ID",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "localhost:3000/category/4",
+                    "path": [
+                        "category",
+                        "4"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                }
+            }
+        },
+        {
+            "name": "Insert Category",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "localhost:3000/category",
+                    "path": [
+                        "category"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"name\": \"Aksesoris\",\n  \"image\": \"https://picsum.photos/500\"\n}"
+                }
+            }
+        },
+        {
+            "name": "Insert Products",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "localhost:3000/products",
+                    "path": [
+                        "products"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"name\": \"Set Panci Stainless Steel\",\n      \"brand\": \"CookMaster\",\n      \"description\": \"Set panci berisi 3 buah panci dengan tutup, terbuat dari bahan stainless steel berkualitas tinggi.\",\n      \"image\": \"https://example.com/panci.jpg\",\n      \"rating\": 4.7,\n      \"price\": 300000,\n      \"stock\": 10,\n      \"category_id\": 2\n}"
+                }
+            }
+        },
+        {
+            "name": "Get All Category",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "localhost:3000/category",
+                    "path": [
+                        "category"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                }
+            }
+        },
+        {
+            "name": "Get All Products",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "localhost:3000/products",
+                    "path": [
+                        "products"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                }
+            }
+        },
+        {
+            "name": "Get Product By ID",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "localhost:3000/products/1",
+                    "path": [
+                        "products",
+                        "1"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                }
+            }
+        },
+        {
+            "name": "Get All Customer",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "localhost:3000/customers",
+                    "path": [
+                        "customers"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                }
+            }
+        },
+        {
+            "name": "Create Customers",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "localhost:3000/customers",
+                    "path": [
+                        "customers"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": 321,\n  \"name\": \"John Doe\",\n  \"contact\": \"+123456\",\n  \"address\": \"Martian 273\"\n}"
+                }
+            }
+        },
+        {
+            "name": "Get Customer By ID",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "localhost:3000/customers/2",
+                    "path": [
+                        "customers",
+                        "2"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"email\": \"example@example.com\",\n  \"password\": \"123\",\n  \"name\": \"John\",\n  \"contact\": \"+6201234567\",\n  \"address\": \"Log Street 271\"\n}"
+                }
+            }
+        },
+        {
+            "name": "Update Customer",
+            "request": {
+                "method": "PUT",
+                "url": {
+                    "raw": "localhost:3000/customers/2",
+                    "path": [
+                        "customers",
+                        "2"
+                    ],
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": 321,\n  \"name\": \"John Doe Updated\",\n  \"contact\": \"+123456\",\n  \"address\": \"Jakarta 123\"\n}"
+                }
+            }
+        }
+    ]
+}
