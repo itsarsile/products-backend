@@ -22,23 +22,32 @@ const selectAllProducts = async (sortBy, sortOrder, search, limit, offset) => {
   return data;
 };
 const selectProductById = (id) => sql`SELECT * FROM "products" WHERE id=${id}`;
-const insertProduct = (productData) => {
+const insertProduct = async (productData) => {
   const {
-    id, name, brand, description, image, rating, price, stock,
+    id, name, brand, description, image, rating, price, category, stock,
   } = productData;
-  return sql`
+  await sql`
     INSERT INTO "products" (
-        id, name, brand, description, image, rating, price, stock
+        id, name, brand, description, image, rating, price, category, stock
     ) VALUES (
-       ${id}, ${name}, ${brand}, ${description}, ${image}, ${rating}, ${price}, ${stock}
+       ${id}, ${name}, ${brand}, ${description}, ${image}, ${rating}, ${price}, ${category}, ${stock}
     )`;
+  const [rows] = await sql`
+      SELECT id FROM categories WHERE name = ${category};
+    `;
+
+  if (rows.id) {
+    await sql`
+        INSERT INTO product_categories (product_id, category_id) VALUES (${id}, ${rows.id});
+      `;
+  }
 };
 
-const updateProduct = (productId, productData) => {
+const updateProduct = async (productId, productData) => {
   const {
     name, brand, description, image, rating, price, stock, category_id,
   } = productData;
-  return sql`
+  await sql`
     UPDATE "products" SET
         name=${name},
         brand=${brand},

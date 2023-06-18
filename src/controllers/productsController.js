@@ -54,12 +54,12 @@ const productsController = {
   create: async (req, res) => {
     try {
       const {
-        name, brand, description, image, rating, price, stock,
+        name, brand, description, image, rating, price, category, stock,
       } = req.body;
       const [count] = await countProductsData();
       const id = Number(count.count) + 1;
       const productData = {
-        id, name, brand, description, image, rating, price, stock,
+        id, name, brand, description, image, rating, price, category, stock,
       };
       await insertProduct(productData);
       sendResponse(res, { data: productData, message: 'Product created successfully.' }, true, 201);

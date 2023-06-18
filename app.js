@@ -25,6 +25,9 @@ const logger = winston.createLogger({
 app.use(cors());
 app.use(xss());
 app.use(helmet());
+
+app.use(express.json());
+app.use('/', mainRoutes);
 app.all('*', (req, res, next) => {
   next(new createHttpError.NotFound());
 });
@@ -38,8 +41,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.use(express.json());
-app.use('/', mainRoutes);
 // app.get('/', (req, res) => res.send('hello world'));
 
 app.listen(port, () => {
