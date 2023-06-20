@@ -6,7 +6,7 @@ const {
   updateOrder,
   deleteOrder,
   countOrdersData,
-  calculateTotalPrice,
+  findOrderById,
 } = require('../models/order');
 const logger = require('../utils/logger');
 const sendResponse = require('../utils/sendResponse');
@@ -14,8 +14,22 @@ const sendResponse = require('../utils/sendResponse');
 const ordersController = {
   getAll: async (req, res) => {
     try {
-      const data = await selectAllOrders();
-      sendResponse(res, { data, message: 'Successfully retrieved orders' }, true, 200);
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 5;
+      const offset = (page - 1) * limit;
+      const data = await selectAllOrders(offset, limit);
+
+      const [count] = await countOrdersData();
+      const totalData = parseInt(count.count, 10);
+      const totalPage = Math.ceil(totalData / limit);
+      const pagination = {
+        currentPage: page,
+        limit,
+        totalData,
+        totalPage,
+      };
+
+      sendResponse(res, { data, message: 'Successfully retrieved orders', pagination }, true, 200);
     } catch (error) {
       logger.error(error);
     }
@@ -36,15 +50,14 @@ const ordersController = {
   create: async (req, res) => {
     try {
       const {
-        order_items,
+        product_id, quantity,
       } = req.body;
       const [count] = await countOrdersData();
       const id = Number(count.count) + 1;
-      const total_price = await calculateTotalPrice(id, order_items);
       const orderData = {
         id,
-        order_items,
-        total_price,
+        product_id,
+        quantity,
       };
 
       await createOrder(orderData);
@@ -57,23 +70,18 @@ const ordersController = {
   update: async (req, res) => {
     try {
       const orderId = Number(req.params.id);
-      const {
-        product_id, customer_id, order_date, shipping_cost, quantity, total_price,
-      } = req.body;
+      const orderExists = findOrderById(orderId);
+      const { product_id, quantity } = req.body;
       const orderData = {
         product_id,
-        customer_id,
-        order_date,
-        shipping_cost,
         quantity,
-        total_price,
       };
-      const updatedOrder = await updateOrder(orderId, orderData);
-      if (!updatedOrder) sendResponse(res, null, false, 404, 'Order not found');
+      await updateOrder(orderId, orderData);
+      if (!orderExists) sendResponse(res, null, false, 404, 'Order not found');
       sendResponse(res, { data: orderData, message: 'Order updated successfully' });
     } catch (error) {
-      logger.error(`Error occurred while updating customer: ${error}`);
-      sendResponse(res, { error, message: 'An error occured while updating customer.' }, false, 500);
+      logger.error(`Error occurred while updating order: ${error}`);
+      sendResponse(res, { error, message: 'An error occured while updating order.' }, false, 500);
     }
   },
   delete: async (req, res) => {
@@ -85,8 +93,8 @@ const ordersController = {
 
       sendResponse(res, { data: deletedOrder, message: 'Order deleted successfully' });
     } catch (error) {
-      logger.error(`Error occurred while deleting customer: ${error}`);
-      sendResponse(res, { error, message: 'An error occured while deleting customer.' }, false, 500);
+      logger.error(`Error occurred while deleting order: ${error}`);
+      sendResponse(res, { error, message: 'An error occured while deleting order.' }, false, 500);
     }
   },
 };

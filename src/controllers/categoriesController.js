@@ -2,7 +2,6 @@ const {
   selectAllCategories,
   insertCategory,
   deleteCategory,
-  findId,
   countCategoriesData,
   selectCategoriesById,
   findCategoryId,

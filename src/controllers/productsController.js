@@ -71,12 +71,24 @@ const productsController = {
   update: async (req, res) => {
     try {
       const productId = Number(req.params.id);
-      const productData = req.body;
+      const {
+        name, brand, description, image, rating, price, category, stock,
+      } = req.body;
+      const productData = {
+        name,
+        brand,
+        description,
+        image,
+        rating,
+        price,
+        category,
+        stock,
+      };
       const productExists = await findProductById(productId);
 
       if (productExists) {
-        const updatedProduct = await updateProduct(productId, productData);
-        sendResponse(res, { data: updatedProduct, message: 'Product updated successfully.' }, true, 200);
+        await updateProduct(productId, productData);
+        sendResponse(res, { data: productData, message: 'Product updated successfully.' }, true, 200);
       } else {
         sendResponse(res, null, false, 404, 'Product not found.');
       }

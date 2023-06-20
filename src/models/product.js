@@ -45,7 +45,7 @@ const insertProduct = async (productData) => {
 
 const updateProduct = async (productId, productData) => {
   const {
-    name, brand, description, image, rating, price, stock, category_id,
+    name, brand, description, image, rating, price, category, stock,
   } = productData;
   await sql`
     UPDATE "products" SET
@@ -54,21 +54,21 @@ const updateProduct = async (productId, productData) => {
         description=${description},
         image=${image},
         rating=${rating},
-        price=${price}
-        stock=${stock},
-        category_id=${category_id}
+        price=${price},
+        category=${category},
+        stock=${stock}
         WHERE id=${productId}
   `;
 };
 
 const deleteProduct = (productId) => sql`
-      DELETE FROM product
+      DELETE FROM products
       WHERE id = ${productId}
     `;
 
 const countProductsData = () => sql`SELECT COUNT(*) FROM products`;
 
-const findId = (id) => sql`SELECT id FROM product WHERE id=${id}`;
+const findProductById = (id) => sql`SELECT id FROM products WHERE id=${id}`;
 
 module.exports = {
   selectAllProducts,
@@ -76,6 +76,6 @@ module.exports = {
   insertProduct,
   updateProduct,
   deleteProduct,
-  findId,
+  findProductById,
   countProductsData,
 };

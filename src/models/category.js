@@ -1,7 +1,25 @@
 const sql = require('../configs/db.config');
 
 const selectAllCategories = () => sql`SELECT * FROM categories`;
-const selectCategoriesById = (categoryId) => sql`SELECT * FROM categories WHERE id=${categoryId}`;
+const selectCategoriesById = (categoryId) => sql`SELECT
+                p.id,
+                p.name,
+                p.brand,
+                p.description,
+                p.image,
+                p.rating,
+                p.price,
+                p.category,
+                p.stock,
+                c.name AS category_name,
+                c.image AS category_image
+                FROM
+                products p
+                JOIN product_categories pc ON p.id = pc.product_id
+                JOIN categories c ON pc.category_id = c.id
+                WHERE
+                c.id = ${categoryId};`;
+
 const insertCategory = (categoryData) => {
   const { id, name, image } = categoryData;
   return sql`
